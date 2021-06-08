@@ -20,4 +20,56 @@ connection.connect(function(err){
 })
 function startProgram() {
      console.log("hello")
+     inquirer.prompt([
+         {
+             type:"list",
+             message:"What would you like to do ?",
+             choices:["Add Employee","Add Department","Add Role","View Employee","View Department","View Role","Update Employee Role","Exit App"],
+             name:"userentry"
+         }
+     ]).then(function(options){
+         switch(options.userentry){
+             case "View Employee":
+                 viewemployee();
+                 break;
+                 case "View Department":
+                 viewdepartment();
+                 break;
+                 case "View Role":
+                 viewrole();
+                 break;
+                 case "Add Department":
+                 adddepartment();
+                 break;
+                 case "Add Employee":
+                 addemployee();
+                 break;
+                 case "Add Role":
+                 addrole();
+                 break;
+                 case "Update Employee Role":
+                 updateemployee();
+                 break;
+             default:
+                 connection.end();
+                 process.exit(0)
+         }
+     })
+}
+
+function adddepartment() {
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "department name",
+            name:"departmentname"
+        }
+    ])
+    .then(function(Response){
+        connection.query("insert into department(name)values(?);",Response.departmentname, function(err,msg){
+            if (err) throw err;
+            console.log("Department added",msg);
+            startProgram()
+        })
+    })
 }
