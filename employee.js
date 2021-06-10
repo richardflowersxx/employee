@@ -69,12 +69,12 @@ function addDepartment() {
     .then(function(Response){
         connection.query("insert into department(name)values(?);",Response.departmentName, function(err,msg){
             if (err) throw err;
-            console.log("Department added",msg);
+            console.log("Department added");
             startProgram()
         })
     })
 }
-
+// how do i get the all the manager from the database?
 function addEmployee() {
     inquirer.prompt([
         {
@@ -86,14 +86,76 @@ function addEmployee() {
             type: "input",
             message: "employee last name",
             name:"employeeLast"
-        }
-        
+        },
+        {
+            type: "list",
+            message: "what is the employee's role?",
+            choices:["Salesperson","Lead Enginner","Software Engineer","Accountant","Legal Team Lead","Lawyer"],
+            name:"employeeRole"
+        },
+        // {
+        //     type: "input",
+        //     message: "employee last name",
+        //     name:"employeeLast"
+        // }
     ])
     .then(function(Response){
-        connection.query("insert into employee(first_name, last_name, role_id, manager_id)values(?,?,?,?);",[Response.employeeFirst, Response.employeeLast, 1, 1], function(err,msg){
+        connection.query("INSERT INTO employee(first_name, last_name, role_id, manager_id)values(?,?,?,?);",[Response.employeeFirst, Response.employeeLast, Response.employeeRole, 1], function(err,msg){
             if (err) throw err;
             console.log("Employee added");
             startProgram()
         });
+    })
+}
+
+function addRole() {
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "what role do you want to add?",
+            name:"roleTitle"
+        },
+        {
+            type: "input",
+            message: "what salary do you want to give this role?",
+            name:"roleSalary"
+        },
+        {
+            type: "list",
+            message: "what department do you want to add this role?",
+            name:"roleDepartment",
+            choices:[ 
+                {
+                    value:1,
+                    message:"Finance"
+                },
+                {
+                    value:2,
+                    message:"Marketing"
+                },
+                {
+                    value:3,
+                    message:"Design"
+                },
+                {
+                    value:4,
+                    message:"Legal"
+                },
+                {
+                    value:5,
+                    message:"Production"
+                }
+            ]
+        },
+    ])
+    .then(function(Response){
+        console.log(Response)
+        connection.query("insert into role(title,salary,department_id) values(?,?,?);",
+        [Response.roleTitle,Response.roleSalary,Response.roleDepartment],
+         function(err,msg){
+            if (err) throw err;
+            console.log("role added");
+            startProgram()
+        })
     })
 }
