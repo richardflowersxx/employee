@@ -30,7 +30,7 @@ function startProgram() {
          }
      ]).then(function(options){
          switch(options.userEntry){
-             case "View Employee":
+                 case "View Employee":
                  viewEmployee();
                  break;
                  case "View Department":
@@ -48,9 +48,7 @@ function startProgram() {
                  case "Add Role":
                  addRole();
                  break;
-                 case "Update Employee Role":
-                 updateEmployee();
-                 break;
+     
              default:
                  connection.end();
                  process.exit(0)
@@ -89,18 +87,35 @@ function addEmployee() {
         },
         {
             type: "list",
-            message: "what is the employee's role?",
-            choices:["Salesperson","Lead Enginner","Software Engineer","Accountant","Legal Team Lead","Lawyer"],
+            message: "what is the employee's role id?",
+            choices:[1,2,3,4,5,6],
             name:"employeeRole"
         },
-        // {
-        //     type: "input",
-        //     message: "employee last name",
-        //     name:"employeeLast"
-        // }
+
+        {
+            type: "list",
+            message: "Enter manager id",
+            name:"managerId",
+            choices:[
+                {
+                    value: 1,
+                    name: "ricardo flores"
+
+                },
+                {
+                    value: 0,
+                    name:"No Manager"
+                },
+                {
+                    value:4,
+                    name: "mak"
+                }
+            ]
+        }
     ])
     .then(function(Response){
-        connection.query("INSERT INTO employee(first_name, last_name, role_id, manager_id)values(?,?,?,?);",[Response.employeeFirst, Response.employeeLast, Response.employeeRole, 1], function(err,msg){
+        connection.query("INSERT INTO employee(first_name, last_name, role_id, manager_id)values(?,?,?,?);",
+        [Response.employeeFirst, Response.employeeLast, Response.employeeRole, Response.managerId], function(err,msg){
             if (err) throw err;
             console.log("Employee added");
             startProgram()
@@ -127,23 +142,23 @@ function addRole() {
             choices:[ 
                 {
                     value:1,
-                    message:"Finance"
+                    name:"Finance"
                 },
                 {
                     value:2,
-                    message:"Marketing"
+                    name:"Marketing"
                 },
                 {
                     value:3,
-                    message:"Design"
+                    name:"Design"
                 },
                 {
                     value:4,
-                    message:"Legal"
+                    name:"Legal"
                 },
                 {
                     value:5,
-                    message:"Production"
+                    name:"Production"
                 }
             ]
         },
@@ -158,4 +173,34 @@ function addRole() {
             startProgram()
         })
     })
+}
+
+function viewEmployee() {
+ 
+        connection.query("select * from employee;",function(err,msg){
+            if (err) throw err;
+            console.table(msg);
+            startProgram()
+        })
+    
+}
+
+function viewDepartment() {
+ 
+    connection.query("select * from Department;",function(err,msg){
+        if (err) throw err;
+        console.table(msg);
+        startProgram()
+    })
+
+}
+
+function viewRole() {
+ 
+    connection.query("select * from role;",function(err,msg){
+        if (err) throw err;
+        console.table(msg);
+        startProgram()
+    })
+
 }
