@@ -1,1 +1,0 @@
-SELECT * FROM grogrogro_db.list;

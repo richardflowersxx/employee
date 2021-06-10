@@ -18,37 +18,38 @@ connection.connect(function(err){
     console.log("Welcome to Employee tracker - backend app");
     startProgram()
 })
+
 function startProgram() {
-     console.log("hello")
+     console.log("what do you wish to do?")
      inquirer.prompt([
          {
              type:"list",
              message:"What would you like to do ?",
              choices:["Add Employee","Add Department","Add Role","View Employee","View Department","View Role","Update Employee Role","Exit App"],
-             name:"userentry"
+             name:"userEntry"
          }
      ]).then(function(options){
-         switch(options.userentry){
+         switch(options.userEntry){
              case "View Employee":
-                 viewemployee();
+                 viewEmployee();
                  break;
                  case "View Department":
-                 viewdepartment();
+                 viewDepartment();
                  break;
                  case "View Role":
-                 viewrole();
+                 viewRole();
                  break;
                  case "Add Department":
-                 adddepartment();
+                 addDepartment();
                  break;
                  case "Add Employee":
-                 addemployee();
+                 addEmployee();
                  break;
                  case "Add Role":
-                 addrole();
+                 addRole();
                  break;
                  case "Update Employee Role":
-                 updateemployee();
+                 updateEmployee();
                  break;
              default:
                  connection.end();
@@ -57,19 +58,42 @@ function startProgram() {
      })
 }
 
-function adddepartment() {
+function addDepartment() {
     inquirer.prompt([
         {
             type: "input",
             message: "department name",
-            name:"departmentname"
+            name:"departmentName"
         }
     ])
     .then(function(Response){
-        connection.query("insert into department(name)values(?);",Response.departmentname, function(err,msg){
+        connection.query("insert into department(name)values(?);",Response.departmentName, function(err,msg){
             if (err) throw err;
             console.log("Department added",msg);
             startProgram()
         })
+    })
+}
+
+function addEmployee() {
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "employee first name",
+            name:"employeeFirst"
+        },
+        {
+            type: "input",
+            message: "employee last name",
+            name:"employeeLast"
+        }
+        
+    ])
+    .then(function(Response){
+        connection.query("insert into employee(first_name, last_name, role_id, manager_id)values(?,?,?,?);",[Response.employeeFirst, Response.employeeLast, 1, 1], function(err,msg){
+            if (err) throw err;
+            console.log("Employee added");
+            startProgram()
+        });
     })
 }
